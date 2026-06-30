@@ -1,7 +1,9 @@
+import geocoder
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget
 import sys
 from PyQt5.Qt import QFont
+import requests
 
 
 
@@ -11,8 +13,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Weather App")
         self.setGeometry(550, 400, 800, 600)
         self.setStyleSheet("background-color:#88B2B5;")
-
+        self.location_allowed = "unknown"
+        self.user_Location = "unknown"
         self.trackPage()
+
 
     def trackPage(self):
         central = QWidget()
@@ -55,13 +59,42 @@ class MainWindow(QMainWindow):
                                      "min-width:275;"
                                      )
 
+
+
         vbox = QVBoxLayout()
         vbox.addWidget(self.welcome_label)
         vbox.addWidget(self.yesButton,alignment=Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.noButton,alignment=Qt.AlignmentFlag.AlignCenter)
-
-
         central.setLayout(vbox)
+
+        self.yesButton.clicked.connect(self.location_allow)
+        self.noButton.clicked.connect(self.location_deny)
+
+
+    def location_allow(self):
+        self.location_allowed = True
+        self.mainPage()
+
+    def location_deny(self):
+        self.location_allowed = False
+        self.mainPage()
+
+    def mainPage(self):
+
+        welcome_message = "Welcome to the Weather App"
+
+        if self.location_allowed:
+            ip_response = requests.get("http://ip-api.com/json/")
+            match ip_response.status_code:
+                case 200:
+                    self.user_Location = ip_response.json()["city"]
+                case 404:
+                    self.error_label = QLabel("404 Not Found Error")
+                case _:
+                    self.error_label = QLabel("There has been an error")
+            if self.user_Location != "unknown":
+                pass
+
 
 
 def main():
