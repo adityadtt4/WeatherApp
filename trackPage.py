@@ -53,8 +53,6 @@ class TrackPage(QMainWindow):
         self.yesButton.clicked.connect(switch)
         self.noButton.clicked.connect(self.location_deny)
 
-        self.switch = "dont switch"
-
 
 
     def location_allow(self):
@@ -86,4 +84,3 @@ class TrackPage(QMainWindow):
                                     "min-width:275;"
                                     )
 
-        self.switch = "switch"

@@ -7,7 +7,7 @@ import sys
 from PyQt5.Qt import QFont
 import requests
 import trackPage
-
+import mainPage
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -17,11 +17,14 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color:#88B2B5;")
         self.location_allowed = "unknown"
         self.user_Location = "unknown"
+
         self.trackPage = trackPage.TrackPage(self.switch_main)
+        self.mainPage = mainPage.MainPage(self.switch_track)
 
         self.screens = QStackedWidget()
         self.setCentralWidget(self.screens)
         self.screens.addWidget(self.trackPage)
+        self.screens.addWidget(self.mainPage)
         self.screens.setCurrentIndex(0)
 
 
@@ -29,7 +32,8 @@ class MainWindow(QMainWindow):
     def switch_main(self):
         self.screens.setCurrentIndex(1)
 
-
+    def switch_track(self):
+        self.screens.setCurrentIndex(0)
 
 '''
     def mainShow(self):
